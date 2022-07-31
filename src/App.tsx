@@ -1,18 +1,50 @@
-import React, { ChangeEventHandler, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { processAnswer } from "./ProcessAnswer";
+import { initializeApp } from "firebase/app";
+import { doc, getDoc, getDocs, getFirestore } from "firebase/firestore";
+import firestoreApp from "./firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 import logo from "./logo.svg";
 import "./App.css";
+type ProblemAndAnswer = {
+    statement: string;
+    answer: string;
+};
 
 function App() {
+    //firestore
+    const db = getFirestore(firestoreApp);
     //create large text box to input text tailwind
     const [input, setInput] = useState("");
     const [isCorrect, setIsCorrect] = useState(false);
+    const [problemsAndAnswer, setProblemsAndAnswer] =
+        useState<ProblemAndAnswer>();
+
+    //useeffect to get data from firestore
+    useEffect(() => {
+        const fetchProblems = async () => {
+            const docRef = doc(db, "problems", "100");
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                console.log("Document data:", docSnap.data());
+                setProblemsAndAnswer(docSnap.data() as ProblemAndAnswer);
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        };
+        fetchProblems();
+    }, [db]);
+
     const onAnswerSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setInput("");
         // console.log(processAnswer(input, "Hello World"));
-        setIsCorrect(processAnswer(input, "Hello World"));
+        if (problemsAndAnswer?.answer) {
+            setIsCorrect(processAnswer(input, problemsAndAnswer.answer));
+        }
     };
     const onInputChange = (e: {
         target: { value: React.SetStateAction<string> };
@@ -23,11 +55,7 @@ function App() {
     return (
         <div className="App">
             <h1 className="text-3xl font-bold">CPC OJ</h1>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Pellentesque euismod, nisi eu consectetur consectetur, nisl nisl
-                consectetur nisl, eu consectetur nisl nisl euismod nisl.
-            </p>
+            <p>{problemsAndAnswer?.statement}</p>
             <form onSubmit={onAnswerSubmit}>
                 <label>
                     Your Answer
