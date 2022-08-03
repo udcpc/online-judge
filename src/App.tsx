@@ -10,6 +10,7 @@ import "./App.css";
 type ProblemAndAnswer = {
     statement: string;
     answer: string;
+    data: string;
 };
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
     //useeffect to get data from firestore
     useEffect(() => {
         const fetchProblems = async () => {
-            const docRef = doc(db, "problems", "100");
+            const docRef = doc(db, "problems", "101");
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
@@ -35,8 +36,22 @@ function App() {
                 console.log("No such document!");
             }
         };
+
         fetchProblems();
     }, [db]);
+    //open text file in new tab to see the data
+    const openFile = () => {
+        if (problemsAndAnswer?.data) {
+            const file = new File([problemsAndAnswer.data], "data.txt");
+            const blob = new Blob([file], { type: "text/plain" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "data.txt";
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+    };
 
     const onAnswerSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -77,6 +92,11 @@ function App() {
             <div className="flex justify-center">
                 <div className="bg-gray-200 text-gray-700 p-4 rounded">
                     <p>{isCorrect ? "Correct" : "Incorrect"}</p>
+                </div>
+                <div className="bg-blue p-2">
+                    {problemsAndAnswer?.data && (
+                        <button onClick={openFile}>Get Data</button>
+                    )}
                 </div>
             </div>
         </div>
