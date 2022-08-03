@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "//udcpc.github.io/online-judge/static/css/main.a9b29905.css",
+    "main.js": "//udcpc.github.io/online-judge/static/js/main.524b8b32.js",
+    "static/js/787.6a13d138.chunk.js": "//udcpc.github.io/online-judge/static/js/787.6a13d138.chunk.js",
+    "index.html": "//udcpc.github.io/online-judge/index.html",
+    "main.a9b29905.css.map": "//udcpc.github.io/online-judge/static/css/main.a9b29905.css.map",
+    "main.524b8b32.js.map": "//udcpc.github.io/online-judge/static/js/main.524b8b32.js.map",
+    "787.6a13d138.chunk.js.map": "//udcpc.github.io/online-judge/static/js/787.6a13d138.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a9b29905.css",
+    "static/js/main.524b8b32.js"
+  ]
+}
