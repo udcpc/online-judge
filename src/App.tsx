@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { processAnswer } from "./ProcessAnswer";
-import { initializeApp } from "firebase/app";
+import ReactMarkdown from "react-markdown";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import Latex from "react-latex";
+
 import { doc, getDoc, getDocs, getFirestore } from "firebase/firestore";
 import firestoreApp from "./firebase";
-import { collection, addDoc } from "firebase/firestore";
 
 import logo from "./logo.svg";
 import "./App.css";
 type ProblemAndAnswer = {
+    statementDisplay: string;
     statement: string;
     answer: string;
     data: string;
@@ -70,7 +74,14 @@ function App() {
     return (
         <div className="App">
             <h1 className="text-3xl font-bold">CPC OJ</h1>
-            <p>{problemsAndAnswer?.statement}</p>
+
+            {problemsAndAnswer?.statementDisplay && (
+                <ReactMarkdown
+                    children={problemsAndAnswer?.statementDisplay}
+                    remarkPlugins={[remarkMath]}
+                    rehypePlugins={[rehypeKatex]}
+                />
+            )}
             <form onSubmit={onAnswerSubmit}>
                 <label>
                     Your Answer
